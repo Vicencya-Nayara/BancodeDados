@@ -1,0 +1,115 @@
+ create database modas;
+
+ use modas;
+ 
+CREATE TABLE Clientes_Carrinho_de_Compras (
+    id_cliente int,
+    nome_cliente varchar(100),
+    endereco varchar(100),
+    email varchar(100),
+    senha varchar(50),
+    nome_completo varchar(100),
+    id_carrinho int,
+    data_criacao date,
+    total_pagar double,
+    PRIMARY KEY (id_cliente, id_carrinho)
+);
+
+CREATE TABLE Produto (
+    id_produto int PRIMARY KEY,
+    nome varchar(100),
+    descricao varchar(500),
+    preco double,
+    categoria varchar(100),
+    tamDisponivel varchar(10)
+);
+
+CREATE TABLE Pedido (
+    endereco_entrega varchar(100),
+    data_criacao date,
+    statusPedido varchar(100),
+    itens_pedido varchar(100),
+    id_pedido int PRIMARY KEY,
+    fk_Clientes_Carrinho_de_Compras_id_cliente int,
+    fk_Clientes_Carrinho_de_Compras_id_carrinho int,
+    fk_Pagamento_id_pagamento int
+);
+
+CREATE TABLE Pagamento (
+    metodoPagamento varchar(100),
+    numero_cartao int,
+    id_pagamento int PRIMARY KEY,
+    data_val_cartao date
+);
+
+CREATE TABLE Itens (
+    quantidade int,
+    id_itens int PRIMARY KEY,
+    valor double,
+    fk_Produto_id_produto int
+);
+
+CREATE TABLE Avalia (
+    fk_Clientes_Carrinho_de_Compras_id_cliente int,
+    fk_Clientes_Carrinho_de_Compras_id_carrinho int,
+    fk_Produto_id_produto int,
+    classicacao varchar(1000),
+    comentario varchar(500),
+    data_avaliacao date
+);
+
+CREATE TABLE Possui (
+    fk_Pedido_id_pedido int,
+    fk_Itens_id_itens int
+);
+
+CREATE TABLE tbPossui (
+    fk_Clientes_Carrinho_de_Compras_id_cliente int,
+    fk_Clientes_Carrinho_de_Compras_id_carrinho int,
+    fk_Itens_id_itens int
+);
+ 
+ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_2
+    FOREIGN KEY (fk_Clientes_Carrinho_de_Compras_id_cliente, fk_Clientes_Carrinho_de_Compras_id_carrinho)
+    REFERENCES Clientes_Carrinho_de_Compras (id_cliente, id_carrinho)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_3
+    FOREIGN KEY (fk_Pagamento_id_pagamento)
+    REFERENCES Pagamento (id_pagamento)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Itens ADD CONSTRAINT FK_Itens_2
+    FOREIGN KEY (fk_Produto_id_produto)
+    REFERENCES Produto (id_produto)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Avalia ADD CONSTRAINT FK_Avalia_1
+    FOREIGN KEY (fk_Clientes_Carrinho_de_Compras_id_cliente, fk_Clientes_Carrinho_de_Compras_id_carrinho)
+    REFERENCES Clientes_Carrinho_de_Compras (id_cliente, id_carrinho)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Avalia ADD CONSTRAINT FK_Avalia_2
+    FOREIGN KEY (fk_Produto_id_produto)
+    REFERENCES Produto (id_produto)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Possui ADD CONSTRAINT FK_Possui_1
+    FOREIGN KEY (fk_Pedido_id_pedido)
+    REFERENCES Pedido (id_pedido)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Possui ADD CONSTRAINT FK_Possui_2
+    FOREIGN KEY (fk_Itens_id_itens)
+    REFERENCES Itens (id_itens)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE tbPossui ADD CONSTRAINT FK_Possui_1
+    FOREIGN KEY (fk_Clientes_Carrinho_de_Compras_id_cliente, fk_Clientes_Carrinho_de_Compras_id_carrinho)
+    REFERENCES Clientes_Carrinho_de_Compras (id_cliente, id_carrinho)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Possui ADD CONSTRAINT FK_Possui_2
+    FOREIGN KEY (fk_Itens_id_itens)
+    REFERENCES Itens (id_itens)
+    ON DELETE RESTRICT;
