@@ -1,59 +1,57 @@
-create database modas;
 
-use modas; 
-
-CREATE TABLE Clientes_Carrinho_de_Compras (
-    id_cliente int primary key auto_increment,
-    nome_cliente varchar(100),
+CREATE TABLE Clientes (
+    id_cliente int PRIMARY KEY,
+    nome_usuario varchar(50),
     endereco varchar(100),
     email varchar(100),
     senha varchar(50),
-    nome_completo varchar(100),
-    id_carrinho int,
-    data_criacao date,
-    total_pagar double,
-    PRIMARY KEY (id_cliente, id_carrinho)
+    nome_completo varchar(100)
 );
 
 CREATE TABLE Produto (
-    id_produto int PRIMARY KEY auto_increment,
+    id_produto int PRIMARY KEY,
     nome varchar(100),
-    descricao varchar(500),
+    descricao varchar(300),
     preco double,
     categoria varchar(100),
     tamDisponivel varchar(10)
+);
+
+CREATE TABLE Carrinho_de_Compras (
+    id_carrinho int PRIMARY KEY,
+    data_criacao date,
+    total_pagar float,
+    fk_Clientes_id_cliente int
 );
 
 CREATE TABLE Pedido (
     endereco_entrega varchar(100),
     data_criacao date,
     statusPedido varchar(100),
-    itens_pedido varchar(100),
+    itens_pedido int,
     id_pedido int PRIMARY KEY,
-    fk_Clientes_Carrinho_de_Compras_id_cliente int,
-    fk_Clientes_Carrinho_de_Compras_id_carrinho int,
+    fk_Clientes_id_cliente int,
     fk_Pagamento_id_pagamento int
 );
 
 CREATE TABLE Pagamento (
-    metodoPagamento varchar(100),
+    metodoPagamento varchar(60),
     numero_cartao int,
-    id_pagamento int PRIMARY KEY auto_increment,
+    id_pagamento int PRIMARY KEY,
     data_val_cartao date
 );
 
 CREATE TABLE Itens (
     quantidade int,
-    id_itens int PRIMARY KEY auto_increment,
-    valor double,
+    id_itens int PRIMARY KEY,
+    valor float,
     fk_Produto_id_produto int
 );
 
 CREATE TABLE Avalia (
-    fk_Clientes_Carrinho_de_Compras_id_cliente int,
-    fk_Clientes_Carrinho_de_Compras_id_carrinho int,
+    fk_Clientes_id_cliente int,
     fk_Produto_id_produto int,
-    classicacao varchar(1000),
+    classicacao int,
     comentario varchar(500),
     data_avaliacao date
 );
@@ -63,15 +61,19 @@ CREATE TABLE Possui (
     fk_Itens_id_itens int
 );
 
-CREATE TABLE tbPossui (
-    fk_Clientes_Carrinho_de_Compras_id_cliente int,
-    fk_Clientes_Carrinho_de_Compras_id_carrinho int,
+CREATE TABLE Possui (
+    fk_Carrinho_de_Compras_id_carrinho int,
     fk_Itens_id_itens int
 );
  
+ALTER TABLE Carrinho_de_Compras ADD CONSTRAINT FK_Carrinho_de_Compras_2
+    FOREIGN KEY (fk_Clientes_id_cliente)
+    REFERENCES Clientes (id_cliente)
+    ON DELETE CASCADE;
+ 
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_2
-    FOREIGN KEY (fk_Clientes_Carrinho_de_Compras_id_cliente, fk_Clientes_Carrinho_de_Compras_id_carrinho)
-    REFERENCES Clientes_Carrinho_de_Compras (id_cliente, id_carrinho)
+    FOREIGN KEY (fk_Clientes_id_cliente)
+    REFERENCES Clientes (id_cliente)
     ON DELETE CASCADE;
  
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_3
@@ -85,8 +87,8 @@ ALTER TABLE Itens ADD CONSTRAINT FK_Itens_2
     ON DELETE RESTRICT;
  
 ALTER TABLE Avalia ADD CONSTRAINT FK_Avalia_1
-    FOREIGN KEY (fk_Clientes_Carrinho_de_Compras_id_cliente, fk_Clientes_Carrinho_de_Compras_id_carrinho)
-    REFERENCES Clientes_Carrinho_de_Compras (id_cliente, id_carrinho)
+    FOREIGN KEY (fk_Clientes_id_cliente)
+    REFERENCES Clientes (id_cliente)
     ON DELETE RESTRICT;
  
 ALTER TABLE Avalia ADD CONSTRAINT FK_Avalia_2
@@ -104,19 +106,12 @@ ALTER TABLE Possui ADD CONSTRAINT FK_Possui_2
     REFERENCES Itens (id_itens)
     ON DELETE RESTRICT;
  
-ALTER TABLE tbPossui ADD CONSTRAINT FK_Possui_3
-    FOREIGN KEY (fk_Clientes_Carrinho_de_Compras_id_cliente, fk_Clientes_Carrinho_de_Compras_id_carrinho)
-    REFERENCES Clientes_Carrinho_de_Compras (id_cliente, id_carrinho)
+ALTER TABLE Possui ADD CONSTRAINT FK_Possui_1
+    FOREIGN KEY (fk_Carrinho_de_Compras_id_carrinho)
+    REFERENCES Carrinho_de_Compras (id_carrinho)
     ON DELETE RESTRICT;
  
-ALTER TABLE tbPossui ADD CONSTRAINT FK_Possui_4
+ALTER TABLE Possui ADD CONSTRAINT FK_Possui_2
     FOREIGN KEY (fk_Itens_id_itens)
     REFERENCES Itens (id_itens)
     ON DELETE RESTRICT;
-    
-    -- Suponha que você deseja adicionar auto incremento à coluna id_produto da tabela Produto
--- Primeiro, remova a chave primária atual
-drop table produto;
-
--- Em seguida, adicione a coluna id_produto com auto incremento
-ALTER TABLE Produto ADD id_produto INT AUTO_INCREMENT PRIMARY KEY;
