@@ -1,9 +1,9 @@
-create database moda;
+create database modas;
 
-use moda; 
+use modas; 
 
 CREATE TABLE Clientes_Carrinho_de_Compras (
-    id_cliente int,
+    id_cliente int primary key auto_increment,
     nome_cliente varchar(100),
     endereco varchar(100),
     email varchar(100),
@@ -16,7 +16,7 @@ CREATE TABLE Clientes_Carrinho_de_Compras (
 );
 
 CREATE TABLE Produto (
-    id_produto int PRIMARY KEY,
+    id_produto int PRIMARY KEY auto_increment,
     nome varchar(100),
     descricao varchar(500),
     preco double,
@@ -38,13 +38,13 @@ CREATE TABLE Pedido (
 CREATE TABLE Pagamento (
     metodoPagamento varchar(100),
     numero_cartao int,
-    id_pagamento int PRIMARY KEY,
+    id_pagamento int PRIMARY KEY auto_increment,
     data_val_cartao date
 );
 
 CREATE TABLE Itens (
     quantidade int,
-    id_itens int PRIMARY KEY,
+    id_itens int PRIMARY KEY auto_increment,
     valor double,
     fk_Produto_id_produto int
 );
@@ -113,3 +113,10 @@ ALTER TABLE tbPossui ADD CONSTRAINT FK_Possui_4
     FOREIGN KEY (fk_Itens_id_itens)
     REFERENCES Itens (id_itens)
     ON DELETE RESTRICT;
+    
+    -- Suponha que você deseja adicionar auto incremento à coluna id_produto da tabela Produto
+-- Primeiro, remova a chave primária atual
+drop table produto;
+
+-- Em seguida, adicione a coluna id_produto com auto incremento
+ALTER TABLE Produto ADD id_produto INT AUTO_INCREMENT PRIMARY KEY;
