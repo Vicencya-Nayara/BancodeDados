@@ -1,117 +1,119 @@
+CREATE DATABASE platModas;
+USE platModas;
 
 CREATE TABLE Clientes (
-    id_cliente int PRIMARY KEY,
-    nome_usuario varchar(50),
-    endereco varchar(100),
-    email varchar(100),
-    senha varchar(50),
-    nome_completo varchar(100)
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome_usuario VARCHAR(50),
+    endereco VARCHAR(100),
+    email VARCHAR(100),
+    senha VARCHAR(50),
+    nome_completo VARCHAR(100)
 );
 
 CREATE TABLE Produto (
-    id_produto int PRIMARY KEY,
-    nome varchar(100),
-    descricao varchar(300),
-    preco double,
-    categoria varchar(100),
-    tamDisponivel varchar(10)
+    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    descricao VARCHAR(300),
+    preco DOUBLE,
+    categoria VARCHAR(100),
+    tamDisponivel VARCHAR(10)
 );
 
 CREATE TABLE Carrinho_de_Compras (
-    id_carrinho int PRIMARY KEY,
-    data_criacao date,
-    total_pagar float,
-    fk_Clientes_id_cliente int
+    id_carrinho INT AUTO_INCREMENT PRIMARY KEY,
+    data_criacao DATE,
+    total_pagar FLOAT,
+    fk_Clientes_id_cliente INT
 );
 
 CREATE TABLE Pedido (
-    endereco_entrega varchar(100),
-    data_criacao date,
-    statusPedido varchar(100),
-    itens_pedido int,
-    id_pedido int PRIMARY KEY,
-    fk_Clientes_id_cliente int,
-    fk_Pagamento_id_pagamento int
+    endereco_entrega VARCHAR(100),
+    data_criacao DATE,
+    statusPedido VARCHAR(100),
+    itens_pedido INT,
+    id_pedido INT AUTO_INCREMENT PRIMARY KEY,
+    fk_Clientes_id_cliente INT,
+    fk_Pagamento_id_pagamento INT
 );
 
 CREATE TABLE Pagamento (
-    metodoPagamento varchar(60),
-    numero_cartao int,
-    id_pagamento int PRIMARY KEY,
-    data_val_cartao date
+    metodoPagamento VARCHAR(60),
+    numero_cartao INT,
+    id_pagamento INT AUTO_INCREMENT PRIMARY KEY,
+    data_val_cartao DATE
 );
 
 CREATE TABLE Itens (
-    quantidade int,
-    id_itens int PRIMARY KEY,
-    valor float,
-    fk_Produto_id_produto int
+    quantidade INT,
+    id_itens INT AUTO_INCREMENT PRIMARY KEY,
+    valor FLOAT,
+    fk_Produto_id_produto INT
 );
 
 CREATE TABLE Avalia (
-    fk_Clientes_id_cliente int,
-    fk_Produto_id_produto int,
-    classicacao int,
-    comentario varchar(500),
-    data_avaliacao date
+    fk_Clientes_id_cliente INT,
+    fk_Produto_id_produto INT,
+    classicacao INT,
+    comentario VARCHAR(500),
+    data_avaliacao DATE
 );
 
-CREATE TABLE Possui (
-    fk_Pedido_id_pedido int,
-    fk_Itens_id_itens int
+CREATE TABLE pedidoItens (
+    fk_Pedido_id_pedido INT,
+    fk_Itens_id_itens INT
 );
 
-CREATE TABLE Possui (
-    fk_Carrinho_de_Compras_id_carrinho int,
-    fk_Itens_id_itens int
+CREATE TABLE carrinhoItens (
+    fk_Carrinho_de_Compras_id_carrinho INT,
+    fk_Itens_id_itens INT
 );
- 
+
 ALTER TABLE Carrinho_de_Compras ADD CONSTRAINT FK_Carrinho_de_Compras_2
     FOREIGN KEY (fk_Clientes_id_cliente)
     REFERENCES Clientes (id_cliente)
     ON DELETE CASCADE;
- 
+
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_2
     FOREIGN KEY (fk_Clientes_id_cliente)
     REFERENCES Clientes (id_cliente)
     ON DELETE CASCADE;
- 
+
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_3
     FOREIGN KEY (fk_Pagamento_id_pagamento)
     REFERENCES Pagamento (id_pagamento)
     ON DELETE RESTRICT;
- 
+
 ALTER TABLE Itens ADD CONSTRAINT FK_Itens_2
     FOREIGN KEY (fk_Produto_id_produto)
     REFERENCES Produto (id_produto)
     ON DELETE RESTRICT;
- 
+
 ALTER TABLE Avalia ADD CONSTRAINT FK_Avalia_1
     FOREIGN KEY (fk_Clientes_id_cliente)
     REFERENCES Clientes (id_cliente)
     ON DELETE RESTRICT;
- 
+
 ALTER TABLE Avalia ADD CONSTRAINT FK_Avalia_2
     FOREIGN KEY (fk_Produto_id_produto)
     REFERENCES Produto (id_produto)
     ON DELETE RESTRICT;
- 
-ALTER TABLE Possui ADD CONSTRAINT FK_Possui_1
+
+ALTER TABLE pedidoItens ADD CONSTRAINT FK_Possui_1
     FOREIGN KEY (fk_Pedido_id_pedido)
     REFERENCES Pedido (id_pedido)
     ON DELETE RESTRICT;
- 
-ALTER TABLE Possui ADD CONSTRAINT FK_Possui_2
+
+ALTER TABLE pedidoItens ADD CONSTRAINT FK_Possui_2
     FOREIGN KEY (fk_Itens_id_itens)
     REFERENCES Itens (id_itens)
     ON DELETE RESTRICT;
- 
-ALTER TABLE Possui ADD CONSTRAINT FK_Possui_1
+
+ALTER TABLE carrinhoItens ADD CONSTRAINT FK_Possui_1
     FOREIGN KEY (fk_Carrinho_de_Compras_id_carrinho)
     REFERENCES Carrinho_de_Compras (id_carrinho)
     ON DELETE RESTRICT;
- 
-ALTER TABLE Possui ADD CONSTRAINT FK_Possui_2
+
+ALTER TABLE carrinhoItens ADD CONSTRAINT FK_Possui_2
     FOREIGN KEY (fk_Itens_id_itens)
     REFERENCES Itens (id_itens)
     ON DELETE RESTRICT;
