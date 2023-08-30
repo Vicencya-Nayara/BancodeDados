@@ -1,1 +1,3 @@
 # BancodeDados
+-requisitos-
+MySQL Workbench
